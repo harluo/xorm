@@ -1,4 +1,4 @@
-module github.com/heluon/xorm
+module github.com/harluo/xorm
 
 go 1.24
 
