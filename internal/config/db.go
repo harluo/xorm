@@ -6,7 +6,7 @@ import (
 
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
-	"github.com/harluo/boot"
+	"github.com/harluo/config"
 	"github.com/harluo/xorm/internal/config/internal"
 	"github.com/harluo/xorm/internal/internal/constant"
 	"xorm.io/xorm/names"
@@ -61,10 +61,10 @@ type DB struct {
 	Sqlite internal.Sqlite `json:"sqlite,omitempty"`
 }
 
-func newDB(config *boot.Config) (db *DB, err error) {
+func newDB(getter *config.Getter) (db *DB, err error) {
 	db = new(DB)
-	err = config.Build().Get(&struct {
-		DB *DB `json:"db,omitempty" valdbate:"required"`
+	err = getter.Get(&struct {
+		DB *DB `json:"db,omitempty" validate:"required"`
 	}{
 		DB: db,
 	})
