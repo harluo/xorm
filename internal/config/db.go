@@ -61,7 +61,7 @@ type DB struct {
 	Sqlite internal.Sqlite `json:"sqlite,omitempty"`
 }
 
-func newDB(getter *config.Getter) (db *DB, err error) {
+func newDB(getter config.Getter) (db *DB, err error) {
 	db = new(DB)
 	err = getter.Get(&struct {
 		DB *DB `json:"db,omitempty" validate:"required"`
