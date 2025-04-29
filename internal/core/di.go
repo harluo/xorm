@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	di.New().Get().Dependency().Puts(
+	di.New().Instance().Put(
 		newEngine,
 		newTransaction,
 		newSynchronizer,
