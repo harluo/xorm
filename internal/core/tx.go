@@ -9,27 +9,27 @@ import (
 	"xorm.io/xorm"
 )
 
-type Transaction struct {
+type Tx struct {
 	engine *Engine
 	logger log.Logger
 
 	_ gox.Pointerized
 }
 
-func newTransaction(engine *Engine, logger log.Logger) *Transaction {
-	return &Transaction{
+func newTransaction(engine *Engine, logger log.Logger) *Tx {
+	return &Tx{
 		engine: engine,
 		logger: logger,
 	}
 }
 
-func (t *Transaction) Do(fun Function, fields ...gox.Field[any]) (int64, error) {
+func (t *Tx) Do(fun Function, fields ...gox.Field[any]) (int64, error) {
 	return t.do(func(tx *Session) (int64, error) {
 		return fun(tx)
 	}, fields...)
 }
 
-func (t *Transaction) do(fun Function, fields ...gox.Field[any]) (affected int64, err error) {
+func (t *Tx) do(fun Function, fields ...gox.Field[any]) (affected int64, err error) {
 	session := t.engine.NewSession()
 	if err = t.begin(session, fields...); nil != err {
 		return
@@ -45,7 +45,7 @@ func (t *Transaction) do(fun Function, fields ...gox.Field[any]) (affected int64
 	return
 }
 
-func (t *Transaction) begin(tx *xorm.Session, fields ...gox.Field[any]) (err error) {
+func (t *Tx) begin(tx *xorm.Session, fields ...gox.Field[any]) (err error) {
 	if err = tx.Begin(); nil != err {
 		t.error(err, "开始数据库事务出错", fields...)
 	}
@@ -53,25 +53,25 @@ func (t *Transaction) begin(tx *xorm.Session, fields ...gox.Field[any]) (err err
 	return
 }
 
-func (t *Transaction) commit(tx *xorm.Session, fields ...gox.Field[any]) {
+func (t *Tx) commit(tx *xorm.Session, fields ...gox.Field[any]) {
 	if err := tx.Commit(); nil != err {
 		t.error(err, "提交数据库事务出错", fields...)
 	}
 }
 
-func (t *Transaction) close(tx *xorm.Session, fields ...gox.Field[any]) {
+func (t *Tx) close(tx *xorm.Session, fields ...gox.Field[any]) {
 	if err := tx.Close(); nil != err {
 		t.error(err, "关闭数据库事务出错", fields...)
 	}
 }
 
-func (t *Transaction) rollback(tx *xorm.Session, fields ...gox.Field[any]) {
+func (t *Tx) rollback(tx *xorm.Session, fields ...gox.Field[any]) {
 	if err := tx.Rollback(); nil != err {
 		t.error(err, "回退数据库事务出错", fields...)
 	}
 }
 
-func (t *Transaction) error(err error, msg string, fields ...gox.Field[any]) {
+func (t *Tx) error(err error, msg string, fields ...gox.Field[any]) {
 	fun, _, line, _ := runtime.Caller(1)
 
 	logFields := make([]gox.Field[any], 0, len(fields)+4)

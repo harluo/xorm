@@ -4,5 +4,5 @@ import (
 	"github.com/harluo/xorm/internal/core"
 )
 
-// Transaction 事务
-type Transaction = core.Transaction
+// Tx 事务
+type Tx = core.Tx
