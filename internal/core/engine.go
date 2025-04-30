@@ -17,7 +17,7 @@ import (
 )
 
 type Engine struct {
-	*xorm.Engine
+	*shadow
 
 	_ gox.Pointerized
 }
@@ -28,10 +28,7 @@ func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 		err = ese
 	} else if dsn, de := db.DSN(); nil != de {
 		err = de
-	} else if _engine, nee := xorm.NewEngine(db.Type, dsn); nil != nee {
-		err = nee
-	} else {
-		engine.Engine = _engine
+	} else if engine.shadow, err = xorm.NewEngine(db.Type, dsn); nil == err {
 		err = setupEngine(db, engine, logger)
 	}
 
