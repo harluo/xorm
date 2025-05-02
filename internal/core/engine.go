@@ -28,7 +28,7 @@ func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 		err = ese
 	} else if dsn, de := db.DSN(); nil != de {
 		err = de
-	} else if engine.shadow, err = xorm.NewEngine(db.Type, dsn); nil == err {
+	} else if engine.shadow, err = xorm.NewEngine(db.Type.String(), dsn); nil == err {
 		err = setupEngine(db, engine, logger)
 	}
 

@@ -4,6 +4,7 @@ go 1.24
 
 require (
 	github.com/elliotchance/sshtunnel v1.6.1
+	github.com/goexl/db v0.0.4
 	github.com/goexl/exception v0.0.3
 	github.com/goexl/gox v1.9.2
 	github.com/goexl/log v0.0.9
@@ -32,7 +33,7 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/harluo/boot v1.7.1 // indirect
+	github.com/harluo/boot v1.7.2 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-runewidth v0.0.16 // indirect

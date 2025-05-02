@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/goexl/db"
 	"github.com/goexl/exception"
 	"github.com/goexl/gox/field"
 	"github.com/harluo/config"
@@ -15,35 +16,35 @@ import (
 type DB struct {
 	// 数据库类型
 	// nolint:lll
-	Type string `default:"sqlite3" json:"type,omitempty" valdbate:"required,oneof=mysql sqlite sqlite3 mssql oracle psql"`
+	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle psql"`
 
 	// 主机
-	Host string `json:"host,omitempty" valdbate:"required,hostname|ip"`
+	Host string `json:"host,omitempty" validate:"required,hostname|ip"`
 	// 端口
-	Port int `default:"3306" json:"port,omitempty" valdbate:"required,max=65535"`
+	Port int `default:"3306" json:"port,omitempty" validate:"required,max=65535"`
 	// 授权，用户名
 	Username string `json:"username,omitempty"`
 	// 授权，密码
 	Password string `json:"password,omitempty"`
 	// 连接协议
 	// nolint: lll
-	Protocol string `default:"tcp" json:"protocol,omitempty" valdbate:"required,oneof=tcp udp"`
+	Protocol string `default:"tcp" json:"protocol,omitempty" validate:"required,oneof=tcp udp"`
 
 	// 连接池配置
 	Connection Connection `json:"connection,omitempty"`
 
 	// 表名规则
 	// nolint: lll
-	Mapper string `default:"gonic" json:"mapper,omitempty" valdbate:"required,oneof=snake same gonic"`
+	Mapper string `default:"gonic" json:"mapper,omitempty" validate:"required,oneof=snake same gonic"`
 	// 表名的前缀
 	Suffix string `json:"suffix,omitempty"`
 	// 表名后缀
 	Prefix string `json:"prefix,omitempty"`
 	// 连接的数据库名
-	Schema string `json:"schema,omitempty" valdbate:"required"`
+	Schema string `json:"schema,omitempty" validate:"required"`
 	// 路径
 	// nolint:lll
-	Path string `default:"data.db" json:"path,omitempty" valdbate:"required_if=Type sqlite3"`
+	Path string `default:"data.db" json:"path,omitempty" validate:"required_if=Type sqlite3"`
 
 	// 额外参数
 	// nolint: lll
@@ -88,15 +89,15 @@ func (d *DB) TableMapper() (mapper names.Mapper) {
 }
 
 func (d *DB) DSN() (dsn string, err error) {
-	switch strings.ToLower(d.Type) {
-	case "mysql":
+	switch d.Type {
+	case db.TypeMysql:
 		dsn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
 		if "" != strings.TrimSpace(d.Schema) {
 			dsn = fmt.Sprintf("%s/%s", dsn, strings.TrimSpace(d.Schema))
 		}
-	case "sqlite":
+	case db.TypeSQLite:
 		dsn = d.Path
-	case "sqlite3":
+	case db.TypeSQLite3:
 		dsn = d.Path
 		if "" != d.Username && "" != d.Password {
 			d.Parameters[d.Sqlite.Name] = ""
