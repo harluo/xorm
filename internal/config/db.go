@@ -93,7 +93,7 @@ func (d *DB) TableMapper() (mapper names.Mapper) {
 
 func (d *DB) DSN() (dsn string, err error) {
 	switch d.Type {
-	case db.TypeMysql:
+	case db.TypeMySQL:
 		dsn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
 		if "" != strings.TrimSpace(d.Schema) {
 			dsn = fmt.Sprintf("%s/%s", dsn, strings.TrimSpace(d.Schema))
