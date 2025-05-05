@@ -26,7 +26,7 @@ func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 	engine = new(Engine)
 	if ese := enableSSH(db, logger); nil != ese {
 		err = ese
-	} else if dsn, de := db.DSN(); nil != de {
+	} else if dsn, de := db.SN(); nil != de {
 		err = de
 	} else if engine.shadow, err = xorm.NewEngine(db.Type.String(), dsn); nil == err {
 		err = setupEngine(db, engine, logger)

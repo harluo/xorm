@@ -91,7 +91,7 @@ func (d *DB) TableMapper() (mapper names.Mapper) {
 	return
 }
 
-func (d *DB) DSN() (dsn string, err error) {
+func (d *DB) SN() (dsn string, err error) {
 	switch d.Type {
 	case db.TypeMySQL:
 		dsn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
