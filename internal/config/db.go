@@ -91,17 +91,17 @@ func (d *DB) TableMapper() (mapper names.Mapper) {
 	return
 }
 
-func (d *DB) SN() (dsn string, err error) {
+func (d *DB) SN() (sn string, err error) {
 	switch d.Type {
 	case db.TypeMySQL:
-		dsn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
+		sn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
 		if "" != strings.TrimSpace(d.Schema) {
-			dsn = fmt.Sprintf("%s/%s", dsn, strings.TrimSpace(d.Schema))
+			sn = fmt.Sprintf("%s/%s", sn, strings.TrimSpace(d.Schema))
 		}
 	case db.TypeSQLite:
-		dsn = d.Path
+		sn = d.Path
 	case db.TypeSQLite3:
-		dsn = d.Path
+		sn = d.Path
 		if "" != d.Username && "" != d.Password {
 			d.Parameters[d.Sqlite.Name] = ""
 			d.Parameters[d.Sqlite.User] = d.Username
@@ -118,7 +118,7 @@ func (d *DB) SN() (dsn string, err error) {
 	// 增加参数
 	parameters := d.Parameters.String()
 	if "" != parameters {
-		dsn = fmt.Sprintf("%s?%s", dsn, parameters)
+		sn = fmt.Sprintf("%s?%s", sn, parameters)
 	}
 
 	return
