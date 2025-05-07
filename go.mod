@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	github.com/elliotchance/sshtunnel v1.6.1
-	github.com/goexl/db v0.0.6
+	github.com/goexl/db v0.0.7
 	github.com/goexl/exception v0.0.3
 	github.com/goexl/gox v1.9.2
 	github.com/goexl/log v0.0.9
@@ -27,7 +27,7 @@ require (
 	github.com/goexl/baozheng v0.0.1 // indirect
 	github.com/goexl/env v0.0.2 // indirect
 	github.com/goexl/gfx v0.2.8 // indirect
-	github.com/goexl/mengpo v0.3.0 // indirect
+	github.com/goexl/mengpo v0.3.1 // indirect
 	github.com/goexl/structer v0.1.9 // indirect
 	github.com/goexl/xiren v0.0.8 // indirect
 	github.com/golang/snappy v1.0.0 // indirect

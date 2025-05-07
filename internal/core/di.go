@@ -7,7 +7,8 @@ import (
 func init() {
 	di.New().Instance().Put(
 		newEngine,
-		newTransaction,
+		newTx,
 		newSynchronizer,
+		newDB,
 	).Build().Apply()
 }

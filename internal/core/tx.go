@@ -16,7 +16,7 @@ type Tx struct {
 	_ gox.Pointerized
 }
 
-func newTransaction(engine *Engine, logger log.Logger) *Tx {
+func newTx(engine *Engine, logger log.Logger) *Tx {
 	return &Tx{
 		engine: engine,
 		logger: logger,

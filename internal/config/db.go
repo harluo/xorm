@@ -15,26 +15,23 @@ import (
 
 type DB struct {
 	// 数据库类型
-	// nolint:lll
-	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle psql"`
+	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres"` // nolint:lll
 
 	// 主机
 	Host string `json:"host,omitempty" validate:"required,hostname|ip"`
 	// 端口
 	Port int `default:"3306" json:"port,omitempty" validate:"required,max=65535"`
-	// 授权，用户名
+	// 用户名
 	Username string `json:"username,omitempty"`
-	// 授权，密码
+	// 密码
 	Password string `json:"password,omitempty"`
 	// 连接协议
-	// nolint: lll
 	Protocol string `default:"tcp" json:"protocol,omitempty" validate:"required,oneof=tcp udp"`
 
 	// 连接池配置
 	Connection Connection `json:"connection,omitempty"`
 
 	// 表名规则
-	// nolint: lll
 	Mapper string `default:"gonic" json:"mapper,omitempty" validate:"required,oneof=snake same gonic"`
 	// 表名的前缀
 	Suffix string `json:"suffix,omitempty"`
@@ -42,12 +39,8 @@ type DB struct {
 	Prefix string `json:"prefix,omitempty"`
 	// 连接的数据库名
 	Schema string `json:"schema,omitempty" validate:"required"`
-	// 路径
-	// nolint:lll
-	Path string `default:"data.db" json:"path,omitempty" validate:"required_if=Type sqlite3"`
 
 	// 额外参数
-	// nolint: lll
 	Parameters internal.Parameters `default:"{'parseTime': true, 'loc': 'Local'}" json:"parameters,omitempty"`
 	// 是否连接时测试数据库连接是否完好
 	Ping *bool `default:"true" json:"ping,omitempty"`
@@ -99,9 +92,9 @@ func (d *DB) SN() (sn string, err error) {
 			sn = fmt.Sprintf("%s/%s", sn, strings.TrimSpace(d.Schema))
 		}
 	case db.TypeSQLite:
-		sn = d.Path
+		sn = d.Schema
 	case db.TypeSQLite3:
-		sn = d.Path
+		sn = d.Schema
 		if "" != d.Username && "" != d.Password {
 			d.Parameters[d.Sqlite.Name] = ""
 			d.Parameters[d.Sqlite.User] = d.Username
