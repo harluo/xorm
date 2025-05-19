@@ -30,7 +30,7 @@ require (
 	github.com/goexl/gfx v0.2.8 // indirect
 	github.com/goexl/mengpo v0.3.1 // indirect
 	github.com/goexl/structer v0.1.9 // indirect
-	github.com/goexl/xiren v0.0.8 // indirect
+	github.com/goexl/xiren v0.0.9 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect

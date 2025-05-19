@@ -74,10 +74,9 @@ func (t *Tx) rollback(tx *xorm.Session, fields ...gox.Field[any]) {
 func (t *Tx) error(err error, msg string, fields ...gox.Field[any]) {
 	fun, _, line, _ := runtime.Caller(1)
 
-	logFields := make([]gox.Field[any], 0, len(fields)+4)
-	logFields = append(logFields, field.New("fun", runtime.FuncForPC(fun).Name()))
+	logFields := make([]gox.Field[any], 0, len(fields)+3)
 	logFields = append(logFields, field.New("line", line))
 	logFields = append(logFields, fields...)
 	logFields = append(logFields, field.Error(err))
-	t.logger.Error(msg, logFields...)
+	t.logger.Error(msg, field.New("fun", runtime.FuncForPC(fun).Name()), logFields...)
 }
