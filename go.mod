@@ -8,7 +8,7 @@ require (
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.2
 	github.com/goexl/log v0.1.0
-	github.com/harluo/config v0.0.7
+	github.com/harluo/config v0.0.8
 	github.com/harluo/di v0.0.5
 	golang.org/x/crypto v0.40.0
 	xorm.io/core v0.7.3
