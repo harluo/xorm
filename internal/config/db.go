@@ -15,7 +15,7 @@ import (
 
 type DB struct {
 	// 数据库类型
-	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres"` // nolint:lll
+	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres postgresql"` // nolint:lll
 
 	// 主机
 	Host string `json:"host,omitempty" validate:"required,hostname|ip"`
@@ -41,7 +41,7 @@ type DB struct {
 	Schema string `json:"schema,omitempty" validate:"required"`
 
 	// 额外参数
-	Parameters internal.Parameters `default:"{'parseTime': true, 'loc': 'Local'}" json:"parameters,omitempty"`
+	Parameters internal.Parameters `json:"parameters,omitempty"`
 	// 是否连接时测试数据库连接是否完好
 	Ping *bool `default:"true" json:"ping,omitempty"`
 	// 是否显示执行语句
@@ -91,6 +91,13 @@ func (d *DB) SN() (sn string, err error) {
 		if "" != strings.TrimSpace(d.Schema) {
 			sn = fmt.Sprintf("%s/%s", sn, strings.TrimSpace(d.Schema))
 		}
+	case db.TypePostgres:
+		sn = fmt.Sprintf(
+			"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
+			d.Host, d.Port,
+			d.Username, d.Password,
+			d.Schema,
+		)
 	case db.TypeSQLite:
 		sn = d.Schema
 	case db.TypeSQLite3:
@@ -104,14 +111,8 @@ func (d *DB) SN() (sn string, err error) {
 	default:
 		err = exception.New().Message("不支持的数据库类型").Field(field.New("type", d.Type)).Build()
 	}
-	if nil != err {
-		return
-	}
-
-	// 增加参数
-	parameters := d.Parameters.String()
-	if "" != parameters {
-		sn = fmt.Sprintf("%s?%s", sn, parameters)
+	if nil == err && 0 != len(d.Parameters) { // 增加参数
+		sn = d.Parameters.Merge(sn, d.Type)
 	}
 
 	return
