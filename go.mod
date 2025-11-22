@@ -10,7 +10,7 @@ require (
 	github.com/goexl/log v0.1.0
 	github.com/harluo/config v0.0.8
 	github.com/harluo/di v0.0.5
-	golang.org/x/crypto v0.44.0
+	golang.org/x/crypto v0.45.0
 	xorm.io/core v0.7.3
 	xorm.io/xorm v1.3.11
 )
@@ -37,7 +37,7 @@ require (
 	github.com/golang/snappy v1.0.0 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/harluo/boot v1.7.6 // indirect
+	github.com/harluo/boot v1.7.8 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -47,7 +47,6 @@ require (
 	github.com/olekukonko/errors v1.1.0 // indirect
 	github.com/olekukonko/ll v0.1.2 // indirect
 	github.com/olekukonko/tablewriter v1.1.1 // indirect
-	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
