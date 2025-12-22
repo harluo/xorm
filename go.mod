@@ -3,7 +3,7 @@ module github.com/harluo/xorm
 go 1.25
 
 require (
-	github.com/elliotchance/sshtunnel v1.6.1
+	github.com/elliotchance/sshtunnel v1.6.2
 	github.com/goexl/db v0.0.7
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.2
