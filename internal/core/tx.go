@@ -36,7 +36,7 @@ func (t *Tx) do(fun Function, fields ...gox.Field[any]) (affected int64, err err
 	}
 	defer t.close(session, fields...)
 
-	if affected, err = fun(&Session{Session: session}); nil != err {
+	if affected, err = fun(&Session{shadowSession: session}); nil != err {
 		t.rollback(session, fields...)
 	} else {
 		t.commit(session, fields...)
