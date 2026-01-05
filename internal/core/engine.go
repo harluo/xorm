@@ -1,6 +1,7 @@
 package core
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -17,9 +18,27 @@ import (
 )
 
 type Engine struct {
-	*shadow
+	*shadowEngine
 
 	_ gox.Pointerized
+}
+
+func (e *Engine) Context(ctx context.Context) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Context(ctx),
+	}
+}
+
+func (e *Engine) Cols(columns ...string) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Cols(columns...),
+	}
+}
+
+func (e *Engine) Where(query any, args ...any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Where(query, args...),
+	}
 }
 
 func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
@@ -28,7 +47,7 @@ func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 		err = ese
 	} else if dsn, de := db.SN(); nil != de {
 		err = de
-	} else if engine.shadow, err = xorm.NewEngine(db.Type.String(), dsn); nil == err {
+	} else if engine.shadowEngine, err = xorm.NewEngine(db.Type.String(), dsn); nil == err {
 		err = setupEngine(db, engine, logger)
 	}
 
