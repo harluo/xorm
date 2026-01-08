@@ -36,3 +36,9 @@ func (s *Session) OrderBy(order any, args ...any) *Session {
 		shadowSession: s.shadowSession.OrderBy(order, args...),
 	}
 }
+
+func (s *Session) Id(id any) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.ID(id),
+	}
+}

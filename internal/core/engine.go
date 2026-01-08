@@ -41,6 +41,12 @@ func (e *Engine) Where(query any, args ...any) *Session {
 	}
 }
 
+func (e *Engine) Id(id any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.ID(id),
+	}
+}
+
 func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 	engine = new(Engine)
 	if ese := enableSSH(db, logger); nil != ese {
