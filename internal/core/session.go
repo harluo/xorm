@@ -2,6 +2,7 @@ package core
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/goexl/gox"
 )
@@ -11,6 +12,10 @@ type Session struct {
 	*shadowSession
 
 	_ gox.Pointerized
+}
+
+func (s *Session) ColumnName(field string) string {
+	return fmt.Sprintf("`%s`", s.Engine().GetColumnMapper().Table2Obj(field))
 }
 
 func (s *Session) Context(ctx context.Context) *Session {
@@ -34,6 +39,18 @@ func (s *Session) Where(query any, args ...any) *Session {
 func (s *Session) OrderBy(order any, args ...any) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.OrderBy(order, args...),
+	}
+}
+
+func (s *Session) Desc(field string) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Desc(s.ColumnName(field)),
+	}
+}
+
+func (s *Session) Asc(field string) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Asc(s.ColumnName(field)),
 	}
 }
 
