@@ -23,6 +23,10 @@ type Engine struct {
 	_ gox.Pointerized
 }
 
+func (e *Engine) ColumnName(field string) string {
+	return fmt.Sprintf("`%s`", e.GetColumnMapper().Table2Obj(field))
+}
+
 func (e *Engine) Context(ctx context.Context) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Context(ctx),
