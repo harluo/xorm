@@ -15,7 +15,7 @@ type Session struct {
 }
 
 func (s *Session) ColumnName(field string) string {
-	return fmt.Sprintf("`%s`", s.Engine().GetColumnMapper().Table2Obj(field))
+	return fmt.Sprintf("`%s`", s.Engine().GetColumnMapper().Obj2Table(field))
 }
 
 func (s *Session) Context(ctx context.Context) *Session {

@@ -24,7 +24,7 @@ type Engine struct {
 }
 
 func (e *Engine) ColumnName(field string) string {
-	return fmt.Sprintf("`%s`", e.GetColumnMapper().Table2Obj(field))
+	return fmt.Sprintf("`%s`", e.GetColumnMapper().Obj2Table(field))
 }
 
 func (e *Engine) Context(ctx context.Context) *Session {
