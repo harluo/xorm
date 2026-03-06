@@ -4,4 +4,4 @@ import (
 	"xorm.io/xorm"
 )
 
-type shadowEngine = xorm.Engine
+type shadowEngine = xorm.EngineGroup

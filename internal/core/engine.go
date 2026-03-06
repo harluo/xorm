@@ -67,10 +67,37 @@ func newEngine(db *config.DB, logger log.Logger) (engine *Engine, err error) {
 	engine = new(Engine)
 	if ese := enableSSH(db, logger); nil != ese {
 		err = ese
-	} else if dsn, de := db.SN(); nil != de {
-		err = de
-	} else if engine.shadowEngine, err = xorm.NewEngine(db.Type.String(), dsn); nil == err {
+	} else if master, cme := createMaster(db); nil != cme {
+		err = cme
+	} else if slaves, cse := createSlaves(db); nil != cse {
+		err = cse
+	} else if engine.shadowEngine, err = xorm.NewEngineGroup(master, slaves); nil == err {
 		err = setupEngine(db, engine, logger)
+	}
+
+	return
+}
+
+func createMaster(db *config.DB) (engine *xorm.Engine, err error) {
+	if dsn, de := db.SN(&db.Server); nil != de {
+		err = de
+	} else {
+		engine, err = xorm.NewEngine(db.Type.String(), dsn)
+	}
+
+	return
+}
+
+func createSlaves(db *config.DB) (slaves []*xorm.Engine, err error) {
+	slaves = make([]*xorm.Engine, len(db.Slaves))
+	for _, slave := range db.Slaves {
+		if dsn, de := db.SN(slave); nil != de {
+			err = de
+		} else if engine, nee := xorm.NewEngine(db.Type.String(), dsn); nil != nee {
+			err = nee
+		} else {
+			slaves = append(slaves, engine)
+		}
 	}
 
 	return

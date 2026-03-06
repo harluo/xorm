@@ -14,22 +14,10 @@ import (
 )
 
 type DB struct {
-	// 数据库类型
-	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres postgresql"` // nolint:lll
+	Server `json:",squash" validate:"required"`
 
-	// 主机
-	Host string `json:"host,omitempty" validate:"required,hostname|ip"`
-	// 端口
-	Port int `default:"3306" json:"port,omitempty" validate:"required,max=65535"`
-	// 用户名
-	Username string `json:"username,omitempty"`
-	// 密码
-	Password string `json:"password,omitempty"`
-	// 连接协议
-	Protocol string `default:"tcp" json:"protocol,omitempty" validate:"required,oneof=tcp udp"`
-
-	// 连接池配置
-	Connection Connection `json:"connection,omitempty"`
+	// 从库列表
+	Slaves map[string]*Server `json:"slaves,omitempty"` // 使用映射方便配置文件编写
 
 	// 表名规则
 	Mapper string `default:"gonic" json:"mapper,omitempty" validate:"required,oneof=snake same gonic"`
@@ -51,8 +39,6 @@ type DB struct {
 	SSH *Ssh `json:"ssh,omitempty"`
 	// 同步
 	Sync Sync `json:"sync,omitempty"`
-	// 参数配置
-	Sqlite internal.Sqlite `json:"sqlite,omitempty"`
 }
 
 func newDB(getter config.Getter) (db *DB, typ db.Type, err error) {
@@ -84,25 +70,29 @@ func (d *DB) TableMapper() (mapper names.Mapper) {
 	return
 }
 
-func (d *DB) SN() (sn string, err error) {
-	switch d.Type {
+func (d *DB) SSHEnabled() bool {
+	return nil != d.SSH && d.SSH.Enable()
+}
+
+func (d *DB) SN(server *Server) (sn string, err error) {
+	switch server.Type {
 	case db.TypeMySQL:
-		sn = fmt.Sprintf("%s:%s@%s(%s:%d)", d.Username, d.Password, d.Protocol, d.Host, d.Port)
+		sn = fmt.Sprintf("%s:%s@%s(%s:%d)", server.Username, server.Password, server.Protocol, server.Host, server.Port)
 		if "" != strings.TrimSpace(d.Schema) {
 			sn = fmt.Sprintf("%s/%s", sn, strings.TrimSpace(d.Schema))
 		}
 	case db.TypePostgres:
 		sn = fmt.Sprintf(
 			"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-			d.Host, d.Port,
-			d.Username, d.Password,
+			server.Host, server.Port,
+			server.Username, server.Password,
 			d.Schema,
 		)
 	case db.TypeSQLite:
 		sn = d.Schema
 	case db.TypeSQLite3:
 		sn = d.Schema
-		if "" != d.Username && "" != d.Password {
+		if "" != server.Username && "" != server.Password {
 			d.Parameters[d.Sqlite.Name] = ""
 			d.Parameters[d.Sqlite.User] = d.Username
 			d.Parameters[d.Sqlite.Password] = d.Password
@@ -116,8 +106,4 @@ func (d *DB) SN() (sn string, err error) {
 	}
 
 	return
-}
-
-func (d *DB) SSHEnabled() bool {
-	return nil != d.SSH && d.SSH.Enable()
 }
