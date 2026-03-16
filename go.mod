@@ -1,6 +1,6 @@
 module github.com/harluo/xorm
 
-go 1.25
+go 1.25.0
 
 require (
 	github.com/elliotchance/sshtunnel v1.6.2
@@ -10,7 +10,7 @@ require (
 	github.com/goexl/log v0.1.0
 	github.com/harluo/config v0.0.8
 	github.com/harluo/di v0.0.5
-	golang.org/x/crypto v0.48.0
+	golang.org/x/crypto v0.49.0
 	xorm.io/core v0.7.3
 	xorm.io/xorm v1.3.11
 )
@@ -18,7 +18,6 @@ require (
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/clipperhouse/displaywidth v0.11.0 // indirect
-	github.com/clipperhouse/stringish v0.1.1 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.7 // indirect
 	github.com/drone/envsubst v1.0.3 // indirect
@@ -55,7 +54,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
 	github.com/zs5460/art v0.3.0 // indirect
 	go.uber.org/dig v1.19.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
-	golang.org/x/text v0.34.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
+	golang.org/x/text v0.35.0 // indirect
 	xorm.io/builder v0.3.13 // indirect
 )
