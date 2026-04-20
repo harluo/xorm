@@ -7,11 +7,12 @@ require (
 	github.com/goexl/db v0.0.7
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.2
+	github.com/goexl/id v0.1.3
 	github.com/goexl/log v0.1.0
 	github.com/goexl/model v0.1.5
 	github.com/harluo/config v0.0.8
 	github.com/harluo/di v0.0.5
-	golang.org/x/crypto v0.49.0
+	golang.org/x/crypto v0.50.0
 	xorm.io/core v0.7.3
 	xorm.io/xorm v1.3.11
 )
@@ -41,11 +42,11 @@ require (
 	github.com/harluo/boot v1.7.8 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
-	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.22 // indirect
+	github.com/mattn/go-isatty v0.0.21 // indirect
+	github.com/mattn/go-runewidth v0.0.23 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/olekukonko/cat v0.0.0-20250911104152-50322a0618f6 // indirect
-	github.com/olekukonko/errors v1.2.0 // indirect
+	github.com/olekukonko/errors v1.3.0 // indirect
 	github.com/olekukonko/ll v0.1.8 // indirect
 	github.com/olekukonko/tablewriter v1.1.4 // indirect
 	github.com/rs/xid v1.6.0 // indirect
@@ -55,7 +56,7 @@ require (
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
 	github.com/zs5460/art v0.3.0 // indirect
 	go.uber.org/dig v1.19.0 // indirect
-	golang.org/x/sys v0.42.0 // indirect
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/sys v0.43.0 // indirect
+	golang.org/x/text v0.36.0 // indirect
 	xorm.io/builder v0.3.13 // indirect
 )
