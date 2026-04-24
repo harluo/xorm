@@ -36,6 +36,12 @@ func (s *Session) Where(query any, args ...any) *Session {
 	}
 }
 
+func (s *Session) Table(name any) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Table(name),
+	}
+}
+
 func (s *Session) OrderBy(order any, args ...any) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.OrderBy(order, args...),

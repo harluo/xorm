@@ -45,6 +45,12 @@ func (e *Engine) Where(query any, args ...any) *Session {
 	}
 }
 
+func (e *Engine) Table(name any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Table(name),
+	}
+}
+
 func (e *Engine) Desc(field string) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Desc(e.ColumnName(field)),
