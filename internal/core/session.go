@@ -42,6 +42,24 @@ func (s *Session) Table(name any) *Session {
 	}
 }
 
+func (s *Session) Join(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Join("INNER", name,condition, args...),
+	}
+}
+
+func (s *Session) LeftJoin(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Join("LEFT", name,condition, args...),
+	}
+}
+
+func (s *Session) RightJoin(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Join("RIGHT", name,condition, args...),
+	}
+}
+
 func (s *Session) OrderBy(order any, args ...any) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.OrderBy(order, args...),

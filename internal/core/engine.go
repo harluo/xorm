@@ -51,6 +51,24 @@ func (e *Engine) Table(name any) *Session {
 	}
 }
 
+func (e *Engine) Join(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Join("INNER", name,condition, args...),
+	}
+}
+
+func (e *Engine) LeftJoin(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Join("LEFT", name,condition, args...),
+	}
+}
+
+func (e *Engine) RightJoin(name any, condition any, args ...any) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Join("RIGHT", name,condition, args...),
+	}
+}
+
 func (e *Engine) Desc(field string) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Desc(e.ColumnName(field)),
