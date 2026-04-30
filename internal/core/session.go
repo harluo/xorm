@@ -84,11 +84,45 @@ func (s *Session) Id(id any) *Session {
 	}
 }
 
+func (s *Session) Reget(object any) (exists bool, err error) {
+	if ca, ce := s.shadowSession.Get(object); ce != nil {
+		exists, err = s.retryExists(object, ce, func(i *bool, e *error) {
+			*i, *e = s.shadowSession.Get(object)
+		})
+	} else {
+		exists = ca
+	}
+
+	return
+}
+
+func (s *Session) Recount(table any, object ...any) (affected int64, err error) {
+	if ca, ce := s.shadowSession.Count(object...); ce != nil {
+		affected, err = s.retryAffected(table, ce, func(i *int64, e *error) {
+			*i, *e = s.shadowSession.Count(object...)
+		})
+	} else {
+		affected = ca
+	}
+
+	return
+}
+
+func (s *Session) Refind(table any, objects any, conditions ...any) (err error) {
+	if ce := s.shadowSession.Find(objects, conditions...); ce != nil {
+		_, err = s.retryAffected(table, ce, func(i *int64, e *error) {
+			*e = s.shadowSession.Find(objects, conditions...)
+		})
+	}
+
+	return
+}
+
 func (s *Session) Persist(object any) (affected int64, err error) {
 	if ifa, ife := s.shadowSession.Insert(object); ife != nil {
-		// !因为在在分表操作，添加不成功时，需要检查是不是表不存在
-		// !存在这么一种可能性，就是程序一直长期未重启过，表结构就不会被同步也不会创建表
-		affected, err = s.retryInsert(object, ife)
+		affected, err = s.retryAffected(object, ife, func(i *int64, e *error) {
+			*i, *e = s.shadowSession.Insert(object)
+		})
 	} else {
 		affected = ifa
 	}
@@ -96,17 +130,33 @@ func (s *Session) Persist(object any) (affected int64, err error) {
 	return
 }
 
-func (s *Session) retryInsert(quota any, original error) (affected int64, err error) {
-	if exists, tee := s.shadowSession.IsTableExist(quota); nil != tee {
+func (s *Session) retryExists(object any, original error, callback func(*bool, *error)) (exists bool, err error) {
+	if exists, tee := s.shadowSession.IsTableExist(object); nil != tee {
 		err = tee
 	} else if !exists {
-		err = s.shadowSession.Sync(quota)
+		err = s.shadowSession.Sync(object)
 	} else {
 		err = original
 	}
 
 	if nil == err {
-		affected, err = s.shadowSession.Insert(quota)
+		callback(&exists, &err)
+	}
+
+	return
+}
+
+func (s *Session) retryAffected(object any, original error, callback func(*int64, *error)) (affected int64, err error) {
+	if exists, tee := s.shadowSession.IsTableExist(object); nil != tee {
+		err = tee
+	} else if !exists {
+		err = s.shadowSession.Sync(object)
+	} else {
+		err = original
+	}
+
+	if nil == err {
+		callback(&affected, &err)
 	}
 
 	return
