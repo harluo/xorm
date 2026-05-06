@@ -69,15 +69,15 @@ func (e *Engine) Right(name any, condition any, args ...any) *Session {
 	}
 }
 
-func (e *Engine) Desc(field gox.Column) *Session {
+func (e *Engine) Desc(field string) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Desc(e.ColumnName(field.String())),
+		shadowSession: e.shadowEngine.Desc(e.ColumnName(field)),
 	}
 }
 
-func (e *Engine) Asc(field gox.Column) *Session {
+func (e *Engine) Asc(field string) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Asc(e.ColumnName(field.String())),
+		shadowSession: e.shadowEngine.Asc(e.ColumnName(field)),
 	}
 }
 

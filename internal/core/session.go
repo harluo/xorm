@@ -66,15 +66,15 @@ func (s *Session) OrderBy(order any, args ...any) *Session {
 	}
 }
 
-func (s *Session) Desc(field gox.Column) *Session {
+func (s *Session) Desc(field string) *Session {
 	return &Session{
-		shadowSession: s.shadowSession.Desc(s.ColumnName(field.String())),
+		shadowSession: s.shadowSession.Desc(s.ColumnName(field)),
 	}
 }
 
-func (s *Session) Asc(field gox.Column) *Session {
+func (s *Session) Asc(field string) *Session {
 	return &Session{
-		shadowSession: s.shadowSession.Asc(s.ColumnName(field.String())),
+		shadowSession: s.shadowSession.Asc(s.ColumnName(field)),
 	}
 }
 
