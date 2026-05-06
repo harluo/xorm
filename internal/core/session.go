@@ -48,13 +48,13 @@ func (s *Session) Join(name any, condition any, args ...any) *Session {
 	}
 }
 
-func (s *Session) LeftJoin(name any, condition any, args ...any) *Session {
+func (s *Session) Left(name any, condition any, args ...any) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.Join("LEFT", name, condition, args...),
 	}
 }
 
-func (s *Session) RightJoin(name any, condition any, args ...any) *Session {
+func (s *Session) Right(name any, condition any, args ...any) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.Join("RIGHT", name, condition, args...),
 	}
@@ -75,6 +75,12 @@ func (s *Session) Desc(field string) *Session {
 func (s *Session) Asc(field string) *Session {
 	return &Session{
 		shadowSession: s.shadowSession.Asc(s.ColumnName(field)),
+	}
+}
+
+func (s *Session) Limit(limit int, starts ...int) *Session {
+	return &Session{
+		shadowSession: s.shadowSession.Limit(limit, starts...),
 	}
 }
 

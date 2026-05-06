@@ -57,13 +57,13 @@ func (e *Engine) Join(name any, condition any, args ...any) *Session {
 	}
 }
 
-func (e *Engine) LeftJoin(name any, condition any, args ...any) *Session {
+func (e *Engine) Left(name any, condition any, args ...any) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Join("LEFT", name,condition, args...),
 	}
 }
 
-func (e *Engine) RightJoin(name any, condition any, args ...any) *Session {
+func (e *Engine) Right(name any, condition any, args ...any) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Join("RIGHT", name,condition, args...),
 	}
@@ -78,6 +78,12 @@ func (e *Engine) Desc(field string) *Session {
 func (e *Engine) Asc(field string) *Session {
 	return &Session{
 		shadowSession: e.shadowEngine.Asc(e.ColumnName(field)),
+	}
+}
+
+func (e *Engine) Limit(limit int, starts ...int) *Session {
+	return &Session{
+		shadowSession: e.shadowEngine.Limit(limit, starts...),
 	}
 }
 
