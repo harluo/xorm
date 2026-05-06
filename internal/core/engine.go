@@ -53,31 +53,31 @@ func (e *Engine) Table(name any) *Session {
 
 func (e *Engine) Join(name any, condition any, args ...any) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Join("INNER", name,condition, args...),
+		shadowSession: e.shadowEngine.Join("INNER", name, condition, args...),
 	}
 }
 
 func (e *Engine) Left(name any, condition any, args ...any) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Join("LEFT", name,condition, args...),
+		shadowSession: e.shadowEngine.Join("LEFT", name, condition, args...),
 	}
 }
 
 func (e *Engine) Right(name any, condition any, args ...any) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Join("RIGHT", name,condition, args...),
+		shadowSession: e.shadowEngine.Join("RIGHT", name, condition, args...),
 	}
 }
 
-func (e *Engine) Desc(field string) *Session {
+func (e *Engine) Desc(field gox.Column) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Desc(e.ColumnName(field)),
+		shadowSession: e.shadowEngine.Desc(e.ColumnName(field.String())),
 	}
 }
 
-func (e *Engine) Asc(field string) *Session {
+func (e *Engine) Asc(field gox.Column) *Session {
 	return &Session{
-		shadowSession: e.shadowEngine.Asc(e.ColumnName(field)),
+		shadowSession: e.shadowEngine.Asc(e.ColumnName(field.String())),
 	}
 }
 
