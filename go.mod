@@ -4,6 +4,7 @@ go 1.25.0
 
 require (
 	github.com/elliotchance/sshtunnel v1.6.2
+	github.com/go-sql-driver/mysql v1.10.0
 	github.com/goexl/db v0.0.7
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.2
@@ -17,6 +18,7 @@ require (
 )
 
 require (
+	filippo.io/edwards25519 v1.2.0 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/clipperhouse/displaywidth v0.11.0 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
