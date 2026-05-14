@@ -9,5 +9,5 @@ type CreatedAt struct {
 	Identity `xorm:"extends"`
 
 	// 创建时间
-	Created time.Time `xorm:"created notnull default(CURRENT_TIMESTAMP) comment('创建时间，创建时自动设置')" json:"created,omitempty"` // nolint:lll
+	Created time.Time `xorm:"created notnull index(timestamp) default(CURRENT_TIMESTAMP) comment('创建时间，创建时自动设置')" json:"created,omitempty"` // nolint:lll
 }

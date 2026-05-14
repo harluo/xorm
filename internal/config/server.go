@@ -3,13 +3,13 @@ package config
 import (
 	"crypto/tls"
 	"crypto/x509"
-	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/goexl/db"
+	"github.com/goexl/exception"
+	"github.com/goexl/gox/field"
 	"github.com/goexl/gox/rand"
 	"github.com/harluo/xorm/internal/config/internal"
 )
@@ -38,72 +38,90 @@ type Server struct {
 	SSL *SSL `json:"ssl,omitempty"`
 }
 
-func (s *Server) SSLParam() {
+func (s *Server) sslParam(parameters internal.Parameters) (err error) {
 	if s.SSL == nil {
 		return
 	}
 
-	rootCertPool := x509.NewCertPool()
-	pem, err := ioutil.ReadFile("/path/to/ca.pem") // 替换为你的CA文件路径
-	if err != nil {
-		log.Fatal(err)
+	switch s.Type {
+	case db.TypeMySQL:
+		err = s.loadMysql(parameters)
+	case db.TypePostgres:
+		err = s.loadPostgres(parameters)
+		default:
+			err = exception.New().Message("暂未支持安全配置").Field(field.New("type", s.Type)).Build()
 	}
 
-	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
-		log.Fatal("failed to append CA cert")
-	}
-
-	// 2. 创建 TLS 配置
-	clientCert := make([]tls.Certificate, 0)
-	// 如果需要双向认证(mTLS)，需要在这里加载 client-cert.pem 和 client-key.pem
-	// cert, err := tls.LoadX509KeyPair("/path/to/client-cert.pem", "/path/to/client-key.pem")
-	// clientCert = append(clientCert, cert)
-
-	tlsConfig := &tls.Config{
-		RootCAs:      rootCertPool,
-		Certificates: clientCert,
-		// ServerName: "mysql-server-hostname", // 仅在证书主机名与连接主机名不同时需要
-	}
-
-	// 3. 将 TLS 配置注册到驱动
-	mysql.RegisterTLSConfig("custom", tlsConfig)
+	return
 }
 
-func (s *Server) loadCA(content []byte) (err error) {
-	pool := x509.NewCertPool()
-	if ok := pool.AppendCertsFromPEM(content); !ok {
-		log.Fatal("failed to append CA cert")
-	} else if s.SSL.Cert != "" && s.SSL.Key != "" {
+func (s *Server) loadPostgres(parameters internal.Parameters) (err error) {
+	if caPath, lfe := s.loadFile(s.SSL.CA); lfe != nil {
+		err = lfe
+	} else {
+		parameters["sslmode"] = "verify-full"
+		parameters["sslrootcert"] = caPath
+	}
 
+	return
+}
+
+func (s *Server) loadMysql(parameters internal.Parameters) (err error) {
+	name := rand.New().String().Build().Generate()
+	if config, lke := s.loadKey(); lke != nil {
+		err = lke
+	} else if rce := mysql.RegisterTLSConfig(name, config); rce != nil {
+		err = rce
+	} else {
+		parameters["tls"] = name
+	}
+
+	return
+}
+
+func (s *Server) loadKey() (config *tls.Config, err error) {
+	pool := x509.NewCertPool()
+	if lce := s.loadCA(pool); lce != nil {
+		err = lce
+	} else if certPath, ce := s.loadFile(s.SSL.Cert); ce != nil {
+		err = ce
+	} else if keyPath, ke := s.loadFile(s.SSL.Key); ke != nil {
+		err = ke
+	} else if cert, lke := tls.LoadX509KeyPair(certPath, keyPath); lke != nil {
+		err = lke
 	} else {
 		certificates := make([]tls.Certificate, 0)
-		// 如果需要双向认证(mTLS)，需要在这里加载 client-cert.pem 和 client-key.pem
-		// cert, err := tls.LoadX509KeyPair("/path/to/client-cert.pem", "/path/to/client-key.pem")
-		// clientCert = append(clientCert, cert)
-
-		tlsConfig := &tls.Config{
+		certificates = append(certificates, cert)
+		config = &tls.Config{
 			RootCAs:      pool,
 			Certificates: certificates,
 			ServerName:   s.Host,
 		}
-
-		// 3. 将 TLS 配置注册到驱动
-		mysql.RegisterTLSConfig("custom", tlsConfig)
 	}
 
+	return
 }
 
-func (s *Server) loadKey() (err error) {
-	if _, se := os.Stat(s.SSL.Cert); se != nil && os.IsNotExist(se) {
-
+func (s *Server) loadCA(pool *x509.CertPool) (err error) {
+	if caPath, lfe := s.loadFile(s.SSL.CA); lfe != nil {
+		err = lfe
+	} else if caData, rfe := os.ReadFile(caPath); rfe != nil {
+		err = rfe
+	} else if ok := pool.AppendCertsFromPEM(caData); !ok {
+		err = exception.New().Message("CA证书未被支持").Field(field.New("type", s.Type)).Build()
 	}
-	cert, err := tls.LoadX509KeyPair("/path/to/client-cert.pem", "/path/to/client-key.pem")
+
+	return
 }
 
 func (s *Server) loadFile(content string) (path string, err error) {
 	if _, se := os.Stat(content); se != nil && os.IsNotExist(se) {
-		os.CreateTemp
+		path, err = s.saveTmp(content)
+	} else {
+		path = content
 	}
+
+	return
 }
 
 func (s *Server) saveTmp(content string) (path string, err error) {
@@ -121,5 +139,5 @@ func (s *Server) saveTmp(content string) (path string, err error) {
 }
 
 func (s *Server) close(file *os.File) {
-	_= file.Close()
+	_ = file.Close()
 }
