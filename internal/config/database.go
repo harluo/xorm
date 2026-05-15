@@ -60,6 +60,10 @@ func (d *Database) SSHEnabled() bool {
 }
 
 func (d *Database) SN(server *Server) (sn string, err error) {
+	if d.Parameters == nil {
+		d.Parameters = make(map[string]any)
+	}
+
 	switch server.Type {
 	case db.TypeMySQL:
 		sn = fmt.Sprintf("%s:%s@%s(%s:%d)", server.Username, server.Password, server.Protocol, server.Host, server.Port)
@@ -87,7 +91,7 @@ func (d *Database) SN(server *Server) (sn string, err error) {
 		err = exception.New().Message("不支持的数据库类型").Field(field.New("type", d.Type)).Build()
 	}
 
-	err = d.sslParam(d.Parameters) // 增加安全连接参数
+	err = d.sslParam(d.Parameters)            // 增加安全连接参数
 	if nil == err && 0 != len(d.Parameters) { // 增加参数
 		sn = d.Parameters.Merge(sn, d.Type)
 	}

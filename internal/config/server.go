@@ -48,8 +48,8 @@ func (s *Server) sslParam(parameters internal.Parameters) (err error) {
 		err = s.loadMysql(parameters)
 	case db.TypePostgres:
 		err = s.loadPostgres(parameters)
-		default:
-			err = exception.New().Message("暂未支持安全配置").Field(field.New("type", s.Type)).Build()
+	default:
+		err = exception.New().Message("暂未支持安全配置").Field(field.New("type", s.Type)).Build()
 	}
 
 	return
@@ -83,11 +83,7 @@ func (s *Server) loadKey() (config *tls.Config, err error) {
 	pool := x509.NewCertPool()
 	if lce := s.loadCA(pool); lce != nil {
 		err = lce
-	} else if certPath, ce := s.loadFile(s.SSL.Cert); ce != nil {
-		err = ce
-	} else if keyPath, ke := s.loadFile(s.SSL.Key); ke != nil {
-		err = ke
-	} else if cert, lke := tls.LoadX509KeyPair(certPath, keyPath); lke != nil {
+	} else if cert, lke := s.loadKeypair(); lke != nil {
 		err = lke
 	} else {
 		certificates := make([]tls.Certificate, 0)
@@ -114,7 +110,23 @@ func (s *Server) loadCA(pool *x509.CertPool) (err error) {
 	return
 }
 
+func (s *Server) loadKeypair() (certificate tls.Certificate, err error) {
+	if certPath, ce := s.loadFile(s.SSL.Cert); ce != nil {
+		err = ce
+	} else if keyPath, ke := s.loadFile(s.SSL.Key); ke != nil {
+		err = ke
+	} else if certPath != "" && keyPath != "" {
+		certificate, err = tls.LoadX509KeyPair(certPath, keyPath)
+	}
+
+	return
+}
+
 func (s *Server) loadFile(content string) (path string, err error) {
+	if content == "" {
+		return
+	}
+
 	if _, se := os.Stat(content); se != nil && os.IsNotExist(se) {
 		path, err = s.saveTmp(content)
 	} else {
@@ -127,7 +139,7 @@ func (s *Server) loadFile(content string) (path string, err error) {
 func (s *Server) saveTmp(content string) (path string, err error) {
 	filename := rand.New().String().Build().Generate()
 	path = filepath.Join(os.TempDir(), filename)
-	if tmp, cte := os.CreateTemp("", filename); cte != nil {
+	if tmp, cte := os.Create(path); cte != nil {
 		err = cte
 	} else {
 		defer s.close(tmp)
