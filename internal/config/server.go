@@ -99,12 +99,12 @@ func (s *Server) loadKey() (config *tls.Config, err error) {
 }
 
 func (s *Server) loadCA(pool *x509.CertPool) (err error) {
-	if caPath, lfe := s.loadFile(s.SSL.CA); lfe != nil {
+	if path, lfe := s.loadFile(s.SSL.CA); lfe != nil {
 		err = lfe
-	} else if caData, rfe := os.ReadFile(caPath); rfe != nil {
+	} else if bytes, rfe := os.ReadFile(path); rfe != nil {
 		err = rfe
-	} else if ok := pool.AppendCertsFromPEM(caData); !ok {
-		err = exception.New().Message("CA证书未被支持").Field(field.New("type", s.Type)).Build()
+	} else if ok := pool.AppendCertsFromPEM(bytes); !ok {
+		err = exception.New().Message("CA证书未被支持").Field(field.New("type", s.Type), field.New("path", path)).Build()
 	}
 
 	return
