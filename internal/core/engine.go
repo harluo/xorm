@@ -168,7 +168,7 @@ func createMaster(database *config.Database) (engine *xorm.Engine, err error) {
 }
 
 func createSlaves(database *config.Database) (slaves []*xorm.Engine, err error) {
-	slaves = make([]*xorm.Engine, len(database.Slaves))
+	slaves = make([]*xorm.Engine, 0, len(database.Slaves))
 	for _, slave := range database.Slaves {
 		if dsn, de := database.SN(slave); nil != de {
 			err = de
