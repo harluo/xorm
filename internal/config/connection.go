@@ -7,7 +7,7 @@ import (
 
 const (
 	// 每个处理器默认持有的最大连接数
-	connectionsPerCPU = 4
+	connectionsPerCPU = 20
 	// 连接默认的最大存活时间
 	defaultLifetime = 15 * time.Minute
 )
