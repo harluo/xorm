@@ -23,8 +23,8 @@ func (c *Connection) Default() (err error) {
 	if c.Open <= 0 { // 未配置最大打开连接数时，根据处理器数量动态计算
 		c.Open = connectionsPerCPU * runtime.GOMAXPROCS(0)
 	}
-	if c.Idle <= 0 { // 未配置最大休眠连接数时，与最大打开连接数保持一致，避免频繁重建连接
-		c.Idle = c.Open
+	if c.Idle <= 0 { // 未配置最大休眠连接数时，为最大连接数百分之四十
+		c.Idle = c.Open * 2 / 5
 	}
 	if c.Idle > c.Open { // 休眠连接数不能超过最大打开连接数
 		c.Idle = c.Open
