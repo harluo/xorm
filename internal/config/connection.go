@@ -13,16 +13,13 @@ const (
 )
 
 type Connection struct {
-	// 最大打开连接数
-	Open int `yaml:"open" json:"open" xml:"open" toml:"open"`
-	// 最大休眠连接数
-	Idle int `yaml:"idle" json:"idle" xml:"idle" toml:"idle"`
-	// 每个连接最大存活时间
-	Lifetime time.Duration `yaml:"lifetime" json:"lifetime" xml:"lifetime" toml:"lifetime"`
+	Open     int           `json:"open"`     // 最大打开连接数
+	Idle     int           `json:"idle"`     // 最大休眠连接数
+	Lifetime time.Duration `json:"lifetime"` // 每个连接最大存活时间
 }
 
 // Default 设置连接池的默认参数，未显式配置的参数在启动时根据处理器数量动态计算
-func (c *Connection) Default() {
+func (c *Connection) Default() (err error) {
 	if c.Open <= 0 { // 未配置最大打开连接数时，根据处理器数量动态计算
 		c.Open = connectionsPerCPU * runtime.GOMAXPROCS(0)
 	}
@@ -35,4 +32,6 @@ func (c *Connection) Default() {
 	if c.Lifetime <= 0 { // 未配置连接最大存活时间时，使用默认值
 		c.Lifetime = defaultLifetime
 	}
+
+	return
 }

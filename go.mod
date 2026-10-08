@@ -34,7 +34,7 @@ require (
 	github.com/goexl/baozheng v0.0.1 // indirect
 	github.com/goexl/env v0.0.2 // indirect
 	github.com/goexl/gfx v0.2.8 // indirect
-	github.com/goexl/mengpo v0.3.2 // indirect
+	github.com/goexl/mengpo v0.3.3 // indirect
 	github.com/goexl/structer v0.2.0 // indirect
 	github.com/goexl/xiren v0.0.9 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
