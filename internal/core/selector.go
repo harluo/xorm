@@ -19,11 +19,17 @@ func (s *Selector) Default() *Engine {
 }
 
 func (s *Selector) Exists(name string) (engine *Engine, exists bool) {
-	engine, exists =s.engines[name]
+	engine, exists = s.engines[name]
 
 	return
 }
 
 func (s *Selector) Select(name string) *Engine {
 	return s.engines[name]
+}
+
+func (s *Selector) Foreach(callback func(string, *Engine)) {
+	for key, value := range s.engines {
+		callback(key, value)
+	}
 }
