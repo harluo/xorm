@@ -70,7 +70,7 @@ func (d *Database) SN(server *Server) (sn string, err error) {
 		if "" != strings.TrimSpace(d.Schema) {
 			sn = fmt.Sprintf("%s/%s", sn, strings.TrimSpace(d.Schema))
 		}
-	case db.TypePostgres:
+	case db.TypePostgres, db.TypePgx:
 		sn = fmt.Sprintf(
 			"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 			server.Host, server.Port,

@@ -12,7 +12,7 @@ import (
 type Parameters map[string]any
 
 func (p Parameters) Merge(dsn string, typ db.Type) (final string) {
-	values := make([]string, len(p))
+	values := make([]string, 0, len(p))
 	for key, value := range p {
 		builder := gox.StringBuilder(key)
 		if stringed := gox.ToString(value); "" != stringed {
@@ -22,7 +22,7 @@ func (p Parameters) Merge(dsn string, typ db.Type) (final string) {
 	}
 
 	switch typ {
-	case db.TypePostgres:
+	case db.TypePostgres, db.TypePgx:
 		final = fmt.Sprintf("%s %s", dsn, strings.Join(values, constant.Space))
 	case db.TypeMySQL:
 		final = fmt.Sprintf("%s?%s", dsn, strings.Join(values, constant.And))

@@ -5,7 +5,7 @@ go 1.27
 require (
 	github.com/elliotchance/sshtunnel v1.6.2
 	github.com/go-sql-driver/mysql v1.10.1
-	github.com/goexl/db v0.0.7
+	github.com/goexl/db v0.0.9
 	github.com/goexl/exception v0.0.4
 	github.com/goexl/gox v1.9.3
 	github.com/goexl/id v0.1.3

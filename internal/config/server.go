@@ -16,7 +16,7 @@ import (
 
 type Server struct {
 	// 数据库类型
-	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres postgresql"` // nolint:lll
+	Type db.Type `default:"sqlite3" json:"type,omitempty" validate:"required,oneof=mysql sqlite sqlite3 mssql oracle postgres pgx"` // nolint:lll
 
 	// 主机
 	Host string `json:"host,omitempty" validate:"required,hostname|ip"`
